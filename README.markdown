@@ -19,12 +19,12 @@ with `$ epm install hyperthunk/econfig` and you're off. If you want to use econf
 in your application and you're building using rebar then a dependency in your
 rebar.config will do the trick nicely:
   
-  {deps, [{econfig, ".*",
-    {git, "http://github.com/hyperthunk/econfig.git", "master"}}]}.
+    {deps, [{econfig, ".*",
+      {git, "http://github.com/hyperthunk/econfig.git", "master"}}]}.
 
 If you're still in Makefile land or simply want to install econfig for use across
 a number of apps, you can build it from sources:
 
-  $ git clone git://github.com/hyperthunk/econfig.git
-  $ cd econfig
-  $ rebar install target=$ERL_LIBS
+    $ git clone git://github.com/hyperthunk/econfig.git
+    $ cd econfig
+    $ rebar install target=$ERL_LIBS
