@@ -1,15 +1,27 @@
 Erlang/OTP Common Configuration Handling
 
+What
+====
+
+* A consistent API to access application/system configuration data
+* Looks like a simple key value store
+* Modular config parsing support including code eval
+* Modular support for disparate storage mechanisms
+* Easy to extend
+
 Why
 ===
 
-Because every Erlang/OTP app I write or come across on github seems to have a
+1. Because I'd like to be able to embed erlang expressions in config files (of
+various formats) and evaluate them on the fly.
+
+2. Because every Erlang/OTP app I write or come across on github seems to have a
 module named {appname}_config which invariably pulls configuration data from disk
 (or elsewhere) and then stores and exposes it in/from one of the following....
 
 * a gen_server process
 * application:get_env/set_env
-* (d)ets/mnesia
+* (d)ets or a simple key value store
 
 How
 ===
