@@ -3,9 +3,9 @@ Erlang/OTP Common Configuration Handling
 Why
 ===
 
-Because every Erlang/OTP app I come across seems to have a module named
-<app>_config which invariably pulls configuration data from disk (or elsewhere)
-and then stores and exposes it in/from one of the following....
+Because every Erlang/OTP app I write or come across on github seems to have a
+module named {appname}_config which invariably pulls configuration data from disk
+(or elsewhere) and then stores and exposes it in/from one of the following....
 
 * a gen_server process
 * application:get_env/set_env
