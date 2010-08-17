@@ -6,8 +6,16 @@ What
 * A consistent API to access application/system configuration data
 * Looks like a simple key value store
 * Modular config parsing support including code eval
-* Modular support for disparate storage mechanisms
+* Modular support for disparate storage mechanisms 
 * Easy to extend
+
+Planned backend storage modules include
+
+* gen_server process
+* application env/props
+
+Also aiming to _prove_ the extensibility by writing a backend for configuration
+files written in embedded Lua (or javascript).
 
 Why
 ===
