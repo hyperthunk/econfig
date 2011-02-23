@@ -29,7 +29,8 @@ test_econfig_server() ->
     ?TESTDOC("Testing the econfig_server module").
 
 test_econfig_server(_Config) ->
-    ?NOT_IMPLEMENTED.
+    _ = meck:new(dog),
+    ok.
 
 %%--------------------------------------------------------------------
 %% Function: suite() -> Info

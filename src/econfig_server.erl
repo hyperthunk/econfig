@@ -1,7 +1,6 @@
 %% -----------------------------------------------------------------------------
 %%
-%% econfig_server: this server handles configuration reloading and routing
-%% configuration queries to the back-end
+%% econfig_server: this server handles execution state for a configuration set.
 %%
 %% -----------------------------------------------------------------------------
 %% Copyright (c) 2010 Tim Watson (watson.timothy@gmail.com)
