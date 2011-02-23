@@ -1,6 +1,6 @@
-%% common_test suite for econfig
+%% common_test suite for econfig_server
 
--module(econfig_SUITE).
+-module(econfig_server_SUITE).
 -include_lib("common_test/include/ct.hrl").
 
 -compile(export_all).
@@ -22,6 +22,14 @@
             Functions
         )
     ].
+
+%% Test Cases
+
+test_econfig_server() ->
+    ?TESTDOC("Testing the econfig_server module").
+
+test_econfig_server(_Config) ->
+    ?NOT_IMPLEMENTED.
 
 %%--------------------------------------------------------------------
 %% Function: suite() -> Info
@@ -170,8 +178,3 @@ init_per_testcase(TestCase, Config) ->
 end_per_testcase(TestCase, Config) ->
     Config.
 
-test_econfig() ->
-    ?TESTDOC("Testing the econfig module").
-
-test_econfig(_Config) ->
-    ?NOT_IMPLEMENTED.
