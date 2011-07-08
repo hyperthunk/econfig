@@ -2,15 +2,19 @@
 
 -module(econfig_SUITE).
 -include_lib("common_test/include/ct.hrl").
-
+-include_lib("proper/include/proper.hrl").
+-include_lib("hamcrest/include/hamcrest.hrl").
+-include("../include/test.hrl").
 -compile(export_all).
+
+-import(econfig, [write_globals/2]).
 
 %% common tests macros and functions
 
--define(TESTDOC(Doc), [{userdata,[{doc,Doc}]}]).
--define(NOT_IMPLEMENTED, {skip,"Not implemented."}).
+-define(TESTDOC(Doc), [{userdata, [{doc,Doc}]}]).
+-define(NOT_IMPLEMENTED, {skip, "Not implemented."}).
 -define(EXPORT_TESTS(Mod),
-	[ {exports, Functions} | _ ] = Mod:module_info(),
+    [ {exports, Functions} | _ ] = Mod:module_info(),
     [ FName || {FName, _} <- lists:filter(
             fun ({module_info,_}) -> false ;
                 ({all,_}) -> false ;
@@ -21,7 +25,31 @@
             end,
             Functions
         )
-    ].
+    ]).
+
+write_empty_globals_should_skip() ->
+    ?TESTDOC("Overwriting Config with [] (globals) should do nothing").
+
+write_empty_globals_should_skip(_Config) ->
+    P = ?FORALL(Config, list({atom(), any()}),
+        ?IMPLIES(length(Config) > 0,
+        assert_that(write_globals([], Config), has_same_contents_as(Config)))),
+    ?EQC(P).
+
+writing_globals_to_empty_config() ->
+    ?TESTDOC("Overwriting empty config with globals").
+
+writing_globals_to_empty_config(_Config) ->
+    P = ?FORALL(Config, list({atom(), any()}),
+        ?IMPLIES(length(Config) > 0,
+        assert_that(write_globals(Config, []), has_same_contents_as(Config)))),
+    ?EQC(P).
+
+globals_should_not_trump_local_config() ->
+    ?TESTDOC("Local definitions should take precedence over global/base config").
+
+globals_should_not_trump_local_config(_Config) ->
+    ?assertThat(write_globals([{a, 1}], [{a, 2}]), contains_member({a, 1})).
 
 %%--------------------------------------------------------------------
 %% Function: suite() -> Info
@@ -70,8 +98,8 @@ groups() -> [].
 %%   Name of a test case.
 %%
 %% Description: Returns the list of groups and test cases that
-%%              are to be executed. 
-%% 
+%%              are to be executed.
+%%
 %%      NB: By default, we export all 1-arity user defined functions
 %%--------------------------------------------------------------------
 all() ->
@@ -91,7 +119,7 @@ all() ->
 %% Note: This function is free to add any key/value pairs to the Config
 %% variable, but should NOT alter/remove any existing entries.
 %%--------------------------------------------------------------------
-init_per_suite(Config) -> 
+init_per_suite(Config) ->
 	Config.
 
 %%--------------------------------------------------------------------
@@ -151,7 +179,7 @@ end_per_group(_group, Config) ->
 %% Note: This function is free to add any key/value pairs to the Config
 %% variable, but should NOT alter/remove any existing entries.
 %%--------------------------------------------------------------------
-init_per_testcase(TestCase, Config) ->
+init_per_testcase(_TestCase, Config) ->
     Config.
 
 %%--------------------------------------------------------------------
@@ -167,11 +195,5 @@ init_per_testcase(TestCase, Config) ->
 %%
 %% Description: Cleanup after each test case.
 %%--------------------------------------------------------------------
-end_per_testcase(TestCase, Config) ->
+end_per_testcase(_TestCase, Config) ->
     Config.
-
-test_econfig() ->
-    ?TESTDOC("Testing the econfig module").
-
-test_econfig(_Config) ->
-    ?NOT_IMPLEMENTED.

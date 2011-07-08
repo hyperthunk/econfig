@@ -1,0 +1,13 @@
+{application,
+ econfig,
+ [{description,"econfig: generalised configuration handling"},
+  {vsn,"0.0.1"},
+  {mod,{appstarter,[{fastlog, configure}]}},
+  {registered,[]},
+  {applications,[kernel,stdlib,fastlog,gproc]},
+  {env,[
+    {appstart,[
+        {startup, [econfig_sup, start_link]},
+        {logging, console}
+    ]}
+  ]}]}.

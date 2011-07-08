@@ -2,7 +2,7 @@
 
 -module(econfig_server_SUITE).
 -include_lib("common_test/include/ct.hrl").
-
+-include_lib("hamcrest/include/hamcrest.hrl").
 -compile(export_all).
 
 %% common tests macros and functions
@@ -10,7 +10,7 @@
 -define(TESTDOC(Doc), [{userdata,[{doc,Doc}]}]).
 -define(NOT_IMPLEMENTED, {skip,"Not implemented."}).
 -define(EXPORT_TESTS(Mod),
-	[ {exports, Functions} | _ ] = Mod:module_info(),
+    [ {exports, Functions} | _ ] = Mod:module_info(),
     [ FName || {FName, _} <- lists:filter(
             fun ({module_info,_}) -> false ;
                 ({all,_}) -> false ;
@@ -21,16 +21,17 @@
             end,
             Functions
         )
-    ].
+    ]).
 
 %% Test Cases
 
-test_econfig_server() ->
-    ?TESTDOC("Testing the econfig_server module").
+missing_storage_handler_fails() ->
+    ?TESTDOC("Initializing an econfig_server without a valid storage handler.").
 
-test_econfig_server(_Config) ->
-    _ = meck:new(dog),
-    ok.
+missing_storage_handler_fails(_Config) ->
+    %%{ok, Svr} = econfig_server:start([]),
+    %%X = assert_that(fun() -> econfig_server:get(Svr, foobar) end, will_fail(error, badmatch)),
+    ?NOT_IMPLEMENTED.
 
 %%--------------------------------------------------------------------
 %% Function: suite() -> Info
@@ -160,7 +161,7 @@ end_per_group(_group, Config) ->
 %% Note: This function is free to add any key/value pairs to the Config
 %% variable, but should NOT alter/remove any existing entries.
 %%--------------------------------------------------------------------
-init_per_testcase(TestCase, Config) ->
+init_per_testcase(_TestCase, Config) ->
     Config.
 
 %%--------------------------------------------------------------------
@@ -176,6 +177,6 @@ init_per_testcase(TestCase, Config) ->
 %%
 %% Description: Cleanup after each test case.
 %%--------------------------------------------------------------------
-end_per_testcase(TestCase, Config) ->
+end_per_testcase(_TestCase, Config) ->
     Config.
 

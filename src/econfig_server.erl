@@ -1,6 +1,7 @@
 %% -----------------------------------------------------------------------------
 %%
-%% econfig_server: this server handles execution state for a configuration set.
+%% econfig_server: this server manages the execution state for a configuration 
+%% handler process.
 %%
 %% -----------------------------------------------------------------------------
 %% Copyright (c) 2010 Tim Watson (watson.timothy@gmail.com)
@@ -28,11 +29,23 @@
 -behaviour(gen_server).
 -define(SERVER, ?MODULE).
 
+
+-record(handler, {
+  module      :: atom(),
+  state = []  :: term()
+}).
+
+-record(state, {
+  storage_handler :: #handler{}
+}).
+
 %% ------------------------------------------------------------------
 %% API Function Exports
 %% ------------------------------------------------------------------
 
--export([start_link/0]).
+-export([start/1, start_link/0]).
+
+-export([get/2]).
 
 %% ------------------------------------------------------------------
 %% gen_server Function Exports
@@ -44,18 +57,26 @@
 %% API Function Definitions
 %% ------------------------------------------------------------------
 
+start(Config) ->
+  gen_server:start({local,?SERVER}, ?SERVER, Config, []).
+
 start_link() ->
   gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
+
+get(Server, Key) ->
+  gen_server:call(Server, {get, Key}).
 
 %% ------------------------------------------------------------------
 %% gen_server Function Definitions
 %% ------------------------------------------------------------------
 
-init(Args) ->
-  {ok, Args}.
+init(_Args) ->
+  %% Storage = proplists:get_value(storage_handler, Args),
+  %% SHandler = #handler{ module=Storage, state=Storage:start() },
+  {ok, #state{}}.
 
-handle_call(_Request, _From, State) ->
-  {noreply, ok, State}.
+handle_call({get, _}, _From, #state{}=State) ->
+  {reply, ok, State}.
 
 handle_cast(_Msg, State) ->
   {noreply, State}.

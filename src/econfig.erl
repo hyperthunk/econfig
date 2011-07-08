@@ -3,7 +3,7 @@
 %% econfig
 %%
 %% -----------------------------------------------------------------------------
-%% Copyright (c) 2010 Tim Watson (watson.timothy@gmail.com)
+%% Copyright (c) 2011 Tim Watson (watson.timothy@gmail.com)
 %%
 %% Permission is hereby granted, free of charge, to any person obtaining a copy
 %% of this software and associated documentation files (the "Software"), to deal
@@ -23,5 +23,40 @@
 %% OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 %% THE SOFTWARE.
 %% -----------------------------------------------------------------------------
-
 -module(econfig).
+-export([write_globals/2]).
+
+-spec write_globals/2 :: 
+        (BaseConfig::list(proplists:property()), 
+         Opts::list(proplists:property())) -> list(proplists:property()).
+write_globals(BaseConfig, Opts) ->
+    Keys = lists:umerge(proplists:get_keys(BaseConfig), proplists:get_keys(Opts)),
+    lists:foldl(rewrite_opts(BaseConfig), Opts, Keys).
+
+rewrite_opts(BaseConfig) ->
+    fun(Key, Opts) ->
+        Replacement = proplists:get_value(Key, BaseConfig, undefined),
+        overwrite({Key, Replacement}, Opts)
+    end.
+
+overwrite({Key, [_|_]=Value}, Opts) ->
+    case lists:keyfind(Key, 1, Opts) of
+        false ->
+            [{Key, Value}|Opts];
+        {Key, Config} when is_list(Config) ->
+            lists:keyreplace(Key, 1, Opts, {Key, Value ++ Config});
+        _ ->
+            lists:keyreplace(Key, 1, Opts, {Key, Value})
+    end;
+overwrite({_Key, []}, Opts) ->
+    Opts;
+overwrite({_Key, undefined}, Opts) ->
+    Opts;
+overwrite({Key, Value}, Opts) ->
+    case lists:keyfind(Key, 1, Opts) of
+        false ->
+            [{Key, Value}|Opts];
+        _ ->
+            lists:keyreplace(Key, 1, Opts, {Key, Value})
+    end.
+
