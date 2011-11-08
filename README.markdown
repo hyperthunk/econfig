@@ -1,14 +1,13 @@
-Erlang/OTP Common Configuration Handling
+# Erlang/OTP Common Configuration Handling
 
-What
-====
+## What
 
 * A simple, consistent API to access application/system configuration data
 * Modular config format support (e.g. Erlang Terms, JSON, YAML, XML, etc)
 * Modular support for disparate storage mechanisms
+* Prebuilt backends for `gproc` and a few others
 
-Why
-===
+## Why
 
 1. Because every Erlang/OTP app I write or come across on github seems to have a
 module named {appname}_config which invariably pulls configuration data from disk
@@ -18,8 +17,16 @@ module named {appname}_config which invariably pulls configuration data from dis
 * application:get_env/set_env
 * (d)ets or a simple key value store
 
-How
-===
+This application is __not__ intended to replace (or compete with) any persistent
+data stores, but merely to provide read-only access to once off configuration
+data.
+
+## Roadmap
+
+* more backends, including zookeeper support
+* less actual code in *econfig*, relying on `bridge` to build backends
+
+## Installing
 
 If you're using Jacob Vorreuter's epm, then it's as simple as hitting the shell
 with `$ epm install hyperthunk/econfig` and you're off. If you want to use econfig
@@ -34,4 +41,4 @@ a number of apps, you can build it from sources:
 
     $ git clone git://github.com/hyperthunk/econfig.git
     $ cd econfig
-    $ rebar install target=$ERL_LIBS
+    $ ./rebar get-deps compile

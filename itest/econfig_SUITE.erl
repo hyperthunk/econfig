@@ -51,6 +51,24 @@ globals_should_not_trump_local_config() ->
 globals_should_not_trump_local_config(_Config) ->
     ?assertThat(write_globals([{a, 1}], [{a, 2}]), contains_member({a, 1})).
 
+termconf_should_make_remote_calls() ->
+    ?TESTDOC("The termconf backend should make remote/external functions calls").
+
+termconf_should_make_remote_calls(Config) ->
+    ConfigFile = filename:join(?config(data_dir, Config), "terms.config"),
+    ExpectedConfigFileName = "erts-" ++ erlang:system_info(version) ++ ".config",
+    Terms = econfig:read(termconf, ConfigFile),
+    ?assertThat(Terms,
+        contains_member({erts_vsn, erlang:system_info(version)})),
+    ?assertThat(Terms,
+        contains_member({erts_string, "erts-" ++ erlang:system_info(version)})),
+    ?assertThat(Terms,
+        contains_member({config_file_name, ExpectedConfigFileName})),
+    ?assertThat(Terms,
+        contains_member({config_file_path, filename:join(element(2,
+                        file:get_cwd()), ExpectedConfigFileName)})),
+    ok.
+
 %%--------------------------------------------------------------------
 %% Function: suite() -> Info
 %%
